@@ -1,0 +1,8 @@
+<div class="border-b border-gray-300">
+    <div class="mb-5">
+        <%= live_component @socket, RoomCreateComponent, id: :room_create_component, current_user: @current_user %>
+    </div>
+</div>
+<div class="mt-5">
+    <%= live_component @socket, RoomListComponent, id: :room_list_component, rooms: @rooms %>
+</div>

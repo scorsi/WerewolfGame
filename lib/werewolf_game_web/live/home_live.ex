@@ -1,39 +1,22 @@
 defmodule WerewolfGameWeb.HomeLive do
   use WerewolfGameWeb, :live_view
 
+  alias WerewolfGame.{PubSub, Manager}
+
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, query: "", results: %{})}
+  def render(assigns) do
+    Phoenix.View.render(WerewolfGameWeb.HomeView, "index.html", assigns)
   end
 
   @impl true
-  def handle_event("suggest", %{"q" => query}, socket) do
-    {:noreply, assign(socket, results: search(query), query: query)}
+  def mount(_params, %{"current_user" => current_user}, socket) do
+    PubSub.subscribe("rooms")
+    {:ok, rooms} = Manager.list_rooms()
+    {:ok, assign(socket, current_user: current_user, rooms: rooms)}
   end
 
   @impl true
-  def handle_event("search", %{"q" => query}, socket) do
-    case search(query) do
-      %{^query => vsn} ->
-        {:noreply, redirect(socket, external: "https://hexdocs.pm/#{query}/#{vsn}")}
-
-      _ ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "No dependencies found matching \"#{query}\"")
-         |> assign(results: %{}, query: query)}
-    end
-  end
-
-  defp search(query) do
-    if not WerewolfGameWeb.Endpoint.config(:code_reloader) do
-      raise "action disabled when not in development"
-    end
-
-    for {app, desc, vsn} <- Application.started_applications(),
-        app = to_string(app),
-        String.starts_with?(app, query) and not List.starts_with?(desc, ~c"ERTS"),
-        into: %{},
-        do: {app, vsn}
+  def handle_info({:new_room, room}, %{"assigns" => %{rooms: rooms}} = socket) do
+    {:noreply, assign(socket, rooms: [rooms | room])}
   end
 end

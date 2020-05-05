@@ -1,0 +1,4 @@
+<%= form_for :room, "#", [phx_submit: "create_room", phx_target: @myself], fn f -> %>
+<%= text_input f, :name, class: "" %>
+<%= submit "Create", class: "" %>
+<% end %>

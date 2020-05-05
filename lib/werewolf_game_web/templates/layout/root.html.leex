@@ -9,7 +9,26 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
-  <body>
-    <%= @inner_content %>
+  <body class="min-h-screen bg-gray-100">
+    <header class="bg-gray-800 w-full pt-8 shadow-lg" style="height: 225px">
+      <h1 class="text-center font-extrabold text-gray-100 text-2xl text-header">The Werewolf Online</h1>
+      <h2 class="text-center font-ultrathin text-gray-100 text-sm text-header">made by Scorsi</h1>
+      <div class="flex justify-center items-center w-full mt-4">
+        <%= if Pow.Plug.current_user(@conn) do %>
+          <div class="m-2 text-gray-100">
+            Connecté en tant que <%= @current_user.nickname %>
+          </div>
+          <%= link "Logout", to: Routes.logout_path(@conn, :logout), method: :delete, class: "btn white m-2" %>
+        <% else %>
+          <%= link "Register", to: Routes.register_path(@conn, :register), class: "btn white m-2" %>
+          <%= link "Login", to: Routes.login_path(@conn, :login), class: "btn white m-2" %>
+        <% end %>
+      </div>
+    </header>
+    <main role="main" class="mx-auto container -mt-16">
+      <div class="bg-gray-100 shadow-lg border border-gray-800 rounded-lg py-5 px-8 mx-5">
+        <%= @inner_content %>
+      </div>
+    </main>
   </body>
 </html>
