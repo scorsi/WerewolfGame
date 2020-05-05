@@ -40,6 +40,12 @@ defmodule WerewolfGame.ManagerTest do
                Manager.create_room(%Room{name: "test3", owner: 3, members: [3, 1, 2]})
     end
 
+    test "error room name invalid" do
+      manager_start()
+
+      assert {:error, :invalid_room_name} = Manager.create_room(%Room{name: ""})
+    end
+
     test "error room already exists" do
       manager_start()
 
