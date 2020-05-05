@@ -1,0 +1,12 @@
+{
+    "emmet.triggerExpansionOnTab": true,
+    "emmet.includeLanguages": {
+        "HTML (EEx)": "html"
+    },
+    "files.associations": {
+        "*.css": "postcss",
+        "*.html.eex": "HTML (EEx)",
+        "*.html.leex": "HTML (EEx)"
+    },
+    "tailwindCSS.emmetCompletions": true
+}
