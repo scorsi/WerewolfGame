@@ -3,6 +3,13 @@ use Mix.Config
 config :werewolf_game,
   ecto_repos: [WerewolfGame.Repo]
 
+  config :werewolf_game,
+         :pow,
+         user: WerewolfGame.Auth.User,
+         repo: WerewolfGame.Repo,
+         web_module: WerewolfGameWeb,
+         cache_store_backend: Pow.Store.Backend.MnesiaCache
+
 config :werewolf_game, WerewolfGameWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "rt5U0qqM/fQpINi6ZPDqyAHUD8mYpUlDVU5KsUD3oXu4XHemLQs/8BKs5PzTdbi5",
