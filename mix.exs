@@ -41,6 +41,7 @@ defmodule WerewolfGame.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:pow, "~> 1.0"},
+      {:ets, "~> 0.7"},
     ]
   end
 
