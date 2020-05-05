@@ -1,0 +1,32 @@
+<h1 class="text-center text-2xl font-bold text-header mt-1 text-gray-900">Connexion</h1>
+<%= form_for @changeset, Routes.login_path(@conn, :login), fn f -> %>
+<div class="w-full flex">
+  <div class="w-full flex-1 m-2 mt-4">
+    <div class="input-container">
+      <div class="input-label-container">
+        <p>
+          <%= label f, :email, class: "input-label" %>
+        </p>
+      </div>
+      <p>
+        <%= text_input f, :email, autocomplete: false, class: "input" %>
+      </p>
+    </div>
+  </div>
+  <div class="w-full flex-1 m-2 mt-4">
+    <div class="input-container">
+      <div class="input-label-container">
+        <p>
+          <%= label f, :password, class: "input-label" %>
+        </p>
+      </div>
+      <p>
+        <%= text_input f, :password, type: :password, class: "input" %>
+      </p>
+    </div>
+  </div>
+</div>
+<div class="flex justify-center">
+  <%= submit "Se connecter", class: "btn gray m-2" %>
+</div>
+<% end %>

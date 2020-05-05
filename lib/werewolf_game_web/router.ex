@@ -12,18 +12,35 @@ defmodule WerewolfGameWeb.Router do
 
   pipeline :protected do
     plug Pow.Plug.RequireAuthenticated,
-      error_handler: CuriousMessengerWeb.AuthErrorHandler
+      error_handler: WerewolfGameWeb.AuthErrorHandler
   end
 
   pipeline :not_authenticated do
     plug Pow.Plug.RequireNotAuthenticated,
-      error_handler: CuriousMessengerWeb.AuthErrorHandler
+      error_handler: WerewolfGameWeb.AuthErrorHandler
   end
 
   scope "/", WerewolfGameWeb do
-    pipe_through :browser
+    pipe_through [:browser]
 
-    get "/", HomeController, :index
+    get "/", HomeController, :index, as: :home
+  end
+
+  scope "/", WerewolfGameWeb do
+    pipe_through [:browser, :not_authenticated]
+
+    get "/register", UserController, :register, as: :register
+    post "/register", UserController, :register_post, as: :register
+    get "/login", UserController, :login, as: :login
+    post "/login", UserController, :login_post, as: :login
+  end
+
+  scope "/", WerewolfGameWeb do
+    pipe_through [:browser, :protected]
+
+    delete "/logout", UserController, :logout, as: :logout
+
+    get "/room/:room_id", RoomController, :index, as: :room
   end
 
   if Mix.env() in [:dev, :test] do
