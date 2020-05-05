@@ -1,0 +1,22 @@
+.input-label {
+    @apply bg-gray-100 text-gray-600 px-1 uppercase transition-colors duration-500;
+}
+
+.input-label-container {
+    @apply -mt-4 absolute tracking-wider px-1 uppercase text-xs;
+}
+
+.input {
+    @apply py-1 px-2 text-gray-900 outline-none rounded block h-full w-full;
+}
+
+.input-container {
+    @apply border transition-colors duration-500 relative rounded p-1;
+    &:focus-within {
+        @apply border-blue-500 text-blue-500;
+
+        & .input-label {
+            @apply text-blue-500;
+        }
+    }
+}

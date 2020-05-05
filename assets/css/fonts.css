@@ -1,0 +1,7 @@
+@font-face {
+  font-family: "Dark Poestry";
+  src: url("/fonts/Dark Poestry.ttf");
+}
+.text-header {
+    font-family: "Dark Poestry";
+}
