@@ -1,6 +1,10 @@
 defmodule WerewolfGame.Auth.User do
-  use Ecto.Schema
-  use Pow.Ecto.Schema
+  use WerewolfGame.Schema
+
+  use Pow.Ecto.Schema,
+    password_min_length: 8,
+    password_max_length: 4096
+
   import Ecto.Changeset
 
   schema "auth_users" do
