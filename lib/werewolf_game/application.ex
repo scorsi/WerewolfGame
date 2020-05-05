@@ -4,10 +4,12 @@ defmodule WerewolfGame.Application do
   def start(_type, _args) do
     children = [
       WerewolfGame.Repo,
-      WerewolfGame.Manager,
       WerewolfGameWeb.Telemetry,
+      WerewolfGame.Manager,
       {Phoenix.PubSub, name: WerewolfGame.PubSub},
+      WerewolfGame.Presence,
       WerewolfGameWeb.Endpoint,
+      Pow.Store.Backend.MnesiaCache,
     ]
 
     opts = [strategy: :one_for_one, name: WerewolfGame.Supervisor]
