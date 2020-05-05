@@ -10,14 +10,20 @@ defmodule WerewolfGameWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
+  pipeline :protected do
+    plug Pow.Plug.RequireAuthenticated,
+      error_handler: CuriousMessengerWeb.AuthErrorHandler
+  end
+
+  pipeline :not_authenticated do
+    plug Pow.Plug.RequireNotAuthenticated,
+      error_handler: CuriousMessengerWeb.AuthErrorHandler
   end
 
   scope "/", WerewolfGameWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    get "/", HomeController, :index
   end
 
   if Mix.env() in [:dev, :test] do

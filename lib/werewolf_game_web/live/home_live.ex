@@ -1,4 +1,4 @@
-defmodule WerewolfGameWeb.PageLive do
+defmodule WerewolfGameWeb.HomeLive do
   use WerewolfGameWeb, :live_view
 
   @impl true
