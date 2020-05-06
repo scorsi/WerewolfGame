@@ -1,3 +1,3 @@
 defmodule WerewolfGame.Manager.Room do
-  defstruct name: "", members: [], owner: 0
+  defstruct id: UUID.uuid4(:hex), name: "", members: [], owner: 0
 end

@@ -13,10 +13,13 @@ defmodule WerewolfGame.ManagerTest do
     test "ok" do
       manager_start()
 
-      Manager.create_room(%Room{name: "test1", owner: 1, members: [1]})
-      assert {:ok, %Room{name: "test1", owner: 1, members: [1]}} = Manager.get_room("test1")
-      Manager.create_room(%Room{name: "test2", owner: 2, members: [2, 1]})
-      assert {:ok, %Room{name: "test2", owner: 2, members: [2, 1]}} = Manager.get_room("test2")
+      {:ok, room1} = Manager.create_room(%Room{name: "test1", owner: 1, members: [1]})
+
+      assert {:ok, %Room{name: "test1", owner: 1, members: [1]}} = Manager.get_room(room1.id)
+
+      {:ok, room2} = Manager.create_room(%Room{name: "test2", owner: 2, members: [2, 1]})
+
+      assert {:ok, %Room{name: "test2", owner: 2, members: [2, 1]}} = Manager.get_room(room2.id)
     end
 
     test "error no room found" do
@@ -39,42 +42,19 @@ defmodule WerewolfGame.ManagerTest do
       assert {:ok, %Room{name: "test3", members: [3, 1, 2]}} =
                Manager.create_room(%Room{name: "test3", owner: 3, members: [3, 1, 2]})
     end
-
-    test "error room name invalid" do
-      manager_start()
-
-      assert {:error, :invalid_room_name} = Manager.create_room(%Room{name: ""})
-    end
-
-    test "error room already exists" do
-      manager_start()
-
-      Manager.create_room(%Room{name: "test1", owner: 1, members: [1]})
-      Manager.create_room(%Room{name: "test2", owner: 2, members: [2]})
-      assert {:error, :room_already_exists} = Manager.create_room(%Room{name: "test1"})
-      assert {:error, :room_already_exists} = Manager.create_room(%Room{name: "test2"})
-    end
   end
 
   describe "delete room" do
     test "ok" do
       manager_start()
 
-      Manager.create_room(%Room{name: "test1", owner: 1, members: [1]})
-      Manager.create_room(%Room{name: "test2", owner: 1, members: [1]})
-      Manager.create_room(%Room{name: "test3", owner: 1, members: [1]})
+      {:ok, room1} = Manager.create_room(%Room{name: "test1", owner: 1, members: [1]})
+      {:ok, room2} = Manager.create_room(%Room{name: "test2", owner: 1, members: [1]})
+      {:ok, room3} = Manager.create_room(%Room{name: "test3", owner: 1, members: [1]})
 
-      assert {:ok, %Room{name: "test1", owner: 1, members: [1]}} = Manager.delete_room("test1")
-
-      assert {:ok,
-              [
-                %Room{name: "test2", owner: 1, members: [1]},
-                %Room{name: "test3", owner: 1, members: [1]}
-              ]} = Manager.list_rooms()
-
-      assert {:ok, %Room{name: "test3", owner: 1, members: [1]}} = Manager.delete_room("test3")
-      assert {:ok, [%Room{name: "test2", owner: 1, members: [1]}]} = Manager.list_rooms()
-      assert {:ok, %Room{name: "test2", owner: 1, members: [1]}} = Manager.delete_room("test2")
+      assert {:ok, %Room{name: "test1", owner: 1, members: [1]}} = Manager.delete_room(room1.id)
+      assert {:ok, %Room{name: "test2", owner: 1, members: [1]}} = Manager.delete_room(room2.id)
+      assert {:ok, %Room{name: "test3", owner: 1, members: [1]}} = Manager.delete_room(room3.id)
       assert {:ok, []} = Manager.list_rooms()
     end
 
@@ -90,9 +70,14 @@ defmodule WerewolfGame.ManagerTest do
       manager_start()
 
       assert {:ok, []} = Manager.list_rooms()
-      Manager.create_room(%Room{name: "test1", owner: 1, members: [1]})
+
+      {:ok, %Room{id: test1_id}} =
+        Manager.create_room(%Room{name: "test1", owner: 1, members: [1]})
+
       assert {:ok, [%Room{name: "test1", owner: 1, members: [1]}]} = Manager.list_rooms()
-      Manager.create_room(%Room{name: "test2", owner: 1, members: [1]})
+
+      {:ok, %Room{id: test2_id}} =
+        Manager.create_room(%Room{name: "test2", owner: 1, members: [1]})
 
       assert {:ok,
               [
@@ -100,7 +85,8 @@ defmodule WerewolfGame.ManagerTest do
                 %Room{name: "test2", owner: 1, members: [1]}
               ]} = Manager.list_rooms()
 
-      Manager.create_room(%Room{name: "test3", owner: 1, members: [1]})
+      {:ok, %Room{id: test3_id}} =
+        Manager.create_room(%Room{name: "test3", owner: 1, members: [1]})
 
       assert {:ok,
               [
@@ -109,7 +95,7 @@ defmodule WerewolfGame.ManagerTest do
                 %Room{name: "test3", owner: 1, members: [1]}
               ]} = Manager.list_rooms()
 
-      Manager.delete_room("test2")
+      Manager.delete_room(test2_id)
 
       assert {:ok,
               [
@@ -120,37 +106,31 @@ defmodule WerewolfGame.ManagerTest do
   end
 
   describe "update room" do
-    test "update values" do
+    test "ok" do
       manager_start()
 
-      Manager.create_room(%Room{name: "test1", owner: 1, members: [1]})
+      {:ok, %Room{id: test1_id}} =
+        Manager.create_room(%Room{name: "test1", owner: 1, members: [1]})
 
       assert {:ok, %Room{name: "test1", owner: 1, members: [1, 2]}} =
-               Manager.update_room("test1", %Room{name: "test1", owner: 1, members: [1, 2]})
+               Manager.update_room(%Room{id: test1_id, name: "test1", owner: 1, members: [1, 2]})
 
       assert {:ok, %Room{name: "test1", owner: 1, members: [1, 2, 123]}} =
-               Manager.update_room("test1", %Room{name: "test1", owner: 1, members: [1, 2, 123]})
+               Manager.update_room(%Room{
+                 id: test1_id,
+                 name: "test1",
+                 owner: 1,
+                 members: [1, 2, 123]
+               })
 
-      assert {:ok, %Room{name: "test1", owner: 1, members: [1, 123]}} =
-               Manager.update_room("test1", %Room{name: "test1", owner: 1, members: [1, 123]})
-    end
-
-    test "update name" do
-      manager_start()
-
-      Manager.create_room(%Room{name: "test1", owner: 1, members: [1, 2]})
-
-      assert {:ok, %Room{name: "test2", owner: 1, members: [1, 2]}} =
-               Manager.update_room("test1", %Room{name: "test2", owner: 1, members: [1, 2]})
-
-      assert {:error, :no_room_found} = Manager.get_room("test1")
-      assert {:ok, %Room{name: "test2", owner: 1, members: [1, 2]}} = Manager.get_room("test2")
+      assert {:ok, %Room{name: "test2", owner: 1, members: [1, 123]}} =
+               Manager.update_room(%Room{id: test1_id, name: "test2", owner: 1, members: [1, 123]})
     end
 
     test "error no room found" do
       manager_start()
 
-      assert {:error, :no_room_found} = Manager.update_room("test", %Room{})
+      assert {:error, :no_room_found} = Manager.update_room(%Room{id: "invalid_id"})
     end
   end
 end

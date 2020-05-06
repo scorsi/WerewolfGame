@@ -21,31 +21,31 @@ defmodule WerewolfGame.Manager do
   end
 
   @impl true
-  def handle_call({:get_room, room_name}, _from, state),
-    do: {:reply, get_room(state.table, room_name), state}
+  def handle_call({:get_room, id}, _from, state),
+    do: {:reply, get_room(state.table, id), state}
 
   @impl true
   def handle_call({:create_room, room}, _from, state),
     do: {:reply, create_room(state.table, room), state}
 
   @impl true
-  def handle_call({:update_room, room_name, room}, _from, state),
-    do: {:reply, update_room(state.table, room_name, room), state}
+  def handle_call({:update_room, room}, _from, state),
+    do: {:reply, update_room(state.table, room), state}
 
   @impl true
-  def handle_call({:delete_room, room_name}, _from, state),
-    do: {:reply, delete_room(state.table, room_name), state}
+  def handle_call({:delete_room, id}, _from, state),
+    do: {:reply, delete_room(state.table, id), state}
 
   @impl true
   def handle_call({:list_rooms}, _from, state),
     do: {:reply, list_rooms(state.table), state}
 
   @spec get_room(String.t()) :: {:ok, Room} | {:error, any}
-  def get_room(room_name),
-    do: GenServer.call(__MODULE__, {:get_room, room_name})
+  def get_room(id),
+    do: GenServer.call(__MODULE__, {:get_room, id})
 
-  defp get_room(table, room_name) do
-    case :ets.lookup(table, room_name) do
+  defp get_room(table, id) do
+    case :ets.lookup(table, id) do
       [] -> {:error, :no_room_found}
       [room] -> {:ok, deserialize(room)}
     end
@@ -55,43 +55,37 @@ defmodule WerewolfGame.Manager do
   def create_room(room),
     do: GenServer.call(__MODULE__, {:create_room, room})
 
-  defp create_room(table, %Room{name: room_name} = room) do
-    if String.length(room_name) == 0 do
-      {:error, :invalid_room_name}
-    else
-      case :ets.insert_new(table, serialize(room)) do
-        true -> {:ok, room}
-        false -> {:error, :room_already_exists}
-      end
+  defp create_room(table, room) do
+    room = %Room{room | id: UUID.uuid4(:hex)}
+    case :ets.insert_new(table, serialize(room)) do
+      true -> {:ok, room}
+      false -> {:error, :room_already_exists}
     end
   end
 
-  @spec update_room(String.t(), Room) :: {:ok, Room} | {:error, any}
-  def update_room(room_name, room),
-    do: GenServer.call(__MODULE__, {:update_room, room_name, room})
+  @spec update_room(Room) :: {:ok, Room} | {:error, any}
+  def update_room(room),
+    do: GenServer.call(__MODULE__, {:update_room, room})
 
-  defp update_room(table, room_name, room) do
-    case room_name != room.name do
-      true ->
-        case delete_room(table, room_name) do
-          {:ok, _} -> create_room(table, room)
-          error -> error
-        end
-
-      false ->
+  defp update_room(table, %Room{id: id} = room) do
+    case get_room(table, id) do
+      {:ok, _} ->
         :ets.insert(table, serialize(room))
         {:ok, room}
+
+      error ->
+        error
     end
   end
 
   @spec delete_room(String.t()) :: {:ok, Room} | {:error, any}
-  def delete_room(room_name),
-    do: GenServer.call(__MODULE__, {:delete_room, room_name})
+  def delete_room(id),
+    do: GenServer.call(__MODULE__, {:delete_room, id})
 
-  defp delete_room(table, room_name) do
-    case get_room(table, room_name) do
+  defp delete_room(table, id) do
+    case get_room(table, id) do
       {:ok, room} ->
-        :ets.delete(table, room_name)
+        :ets.delete(table, id)
         {:ok, room}
 
       error ->
@@ -108,14 +102,15 @@ defmodule WerewolfGame.Manager do
       :ok,
       :ets.tab2list(table)
       |> Enum.map(&deserialize(&1))
+      |> Enum.sort(&(&1.name <= &2.name))
     }
   end
 
-  defp serialize(%Room{name: name, members: members, owner: owner}) do
-    {name, members, owner}
+  defp serialize(%Room{id: id, name: name, members: members, owner: owner}) do
+    {id, name, members, owner}
   end
 
-  defp deserialize({name, members, owner}) do
-    %Room{name: name, members: members, owner: owner}
+  defp deserialize({id, name, members, owner}) do
+    %Room{id: id, name: name, members: members, owner: owner}
   end
 end
