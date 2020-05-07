@@ -5,8 +5,10 @@ defmodule WerewolfGame.Application do
     children = [
       WerewolfGame.Repo,
       WerewolfGameWeb.Telemetry,
-      WerewolfGame.Manager,
       {Phoenix.PubSub, name: WerewolfGame.PubSub},
+      {Registry, keys: :unique, name: WerewolfGame.RoomRegistry},
+      {DynamicSupervisor, strategy: :one_for_one, name: WerewolfGame.RoomSupervisor},
+      WerewolfGame.PublicRoomAgent,
       WerewolfGame.Presence,
       WerewolfGameWeb.Endpoint,
       Pow.Store.Backend.MnesiaCache,

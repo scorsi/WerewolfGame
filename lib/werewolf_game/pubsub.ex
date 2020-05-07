@@ -3,11 +3,15 @@ defmodule WerewolfGame.PubSub do
     Phoenix.PubSub.subscribe(WerewolfGame.PubSub, topic)
   end
 
-  def broadcast(topic, event, payload) do
+  def unsubscribe(topic) do
+    Phoenix.PubSub.unsubscribe(WerewolfGame.PubSub, topic)
+  end
+
+  def broadcast(topic, event, payload \\ nil) do
     Phoenix.PubSub.broadcast(
       WerewolfGame.PubSub,
       topic,
-      {event, payload}
+      %{event: event, payload: payload}
     )
     {:ok, payload}
   end

@@ -1,7 +1,8 @@
 defmodule WerewolfGameWeb.HomeLive do
   use WerewolfGameWeb, :live_view
+  use WerewolfGameWeb.LiveViewPowHelper
 
-  alias WerewolfGame.{PubSub, Manager}
+  alias WerewolfGame.PublicRoomAgent
 
   @impl true
   def render(assigns) do
@@ -9,14 +10,33 @@ defmodule WerewolfGameWeb.HomeLive do
   end
 
   @impl true
-  def mount(_params, %{"current_user" => current_user}, socket) do
-    PubSub.subscribe("rooms")
-    {:ok, rooms} = Manager.list_rooms()
-    {:ok, assign(socket, current_user: current_user, rooms: rooms)}
+  def mount(_params, session, socket) do
+    PublicRoomAgent.subscribe()
+    socket = maybe_assign_current_user(socket, session)
+    {:ok, assign(socket, rooms: PublicRoomAgent.list_rooms())}
   end
 
   @impl true
-  def handle_info({:new_room, room}, %{"assigns" => %{rooms: rooms}} = socket) do
-    {:noreply, assign(socket, rooms: [rooms | room])}
+  def handle_info(
+        %{event: :actualized_room, payload: room},
+        %{assigns: %{rooms: rooms}} = socket
+      ) do
+    {:noreply, assign(socket, rooms: rooms |> Map.put(room.id, room))}
+  end
+
+  @impl true
+  def handle_info(
+        %{event: :registered_room, payload: room},
+        %{assigns: %{rooms: rooms}} = socket
+      ) do
+    {:noreply, assign(socket, rooms: rooms |> Map.put(room.id, room))}
+  end
+
+  @impl true
+  def handle_info(
+        %{event: :unregistered_room, payload: room},
+        %{assigns: %{rooms: rooms}} = socket
+      ) do
+    {:noreply, assign(socket, rooms: rooms |> Map.delete(room.id))}
   end
 end

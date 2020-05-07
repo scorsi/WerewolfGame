@@ -1,0 +1,10 @@
+<p>Hello <%= length @room.members %> members</p>
+<ul>
+    <%= for member <- @room.members do %>
+      <li><%= member.nickname %></li>
+    <% end %>
+</ul>
+<%= if @is_owner? do %>
+<p>You're the owner</p>
+<% end %>
+<p><%= @room.id %></p>

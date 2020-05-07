@@ -1,4 +1,6 @@
 defmodule WerewolfGameWeb.Router do
+  require Logger
+
   use WerewolfGameWeb, :router
 
   pipeline :browser do
@@ -23,7 +25,7 @@ defmodule WerewolfGameWeb.Router do
   scope "/", WerewolfGameWeb do
     pipe_through [:browser]
 
-    get "/", HomeController, :index, as: :home
+    live "/", HomeLive
   end
 
   scope "/", WerewolfGameWeb do
@@ -40,7 +42,7 @@ defmodule WerewolfGameWeb.Router do
 
     delete "/logout", UserController, :logout, as: :logout
 
-    get "/room/:room_id", RoomController, :index, as: :room
+    live "/room", RoomLive
   end
 
   if Mix.env() in [:dev, :test] do
