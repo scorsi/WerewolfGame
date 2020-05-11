@@ -10,12 +10,11 @@
 use Distillery.Releases.Config,
     # This sets the default release built by `mix distillery.release`
     default_release: :default,
-    # This sets the default environment used by `mix distillery.release`
+      # This sets the default environment used by `mix distillery.release`
     default_environment: Mix.env()
 
 # For a full list of config options for both releases
 # and environments, visit https://hexdocs.pm/distillery/config/distillery.html
-
 
 # You may define one or more environments in this file,
 # an environment's settings will override those of a release
@@ -29,16 +28,16 @@ environment :dev do
   # It is recommended that you build with MIX_ENV=prod and pass
   # the --env flag to Distillery explicitly if you want to use
   # dev mode.
-  set dev_mode: true
-  set include_erts: false
-  set cookie: :"W>4tVgPp*4BL4HcIcR{>T[qhf(lJnnm97VCUy;e7>?UBE]6?qP@:zCWu5ZV`udEi"
+  set(dev_mode: true)
+  set(include_erts: false)
+  set(cookie: :"W>4tVgPp*4BL4HcIcR{>T[qhf(lJnnm97VCUy;e7>?UBE]6?qP@:zCWu5ZV`udEi")
 end
 
 environment :prod do
-  set include_erts: true
-  set include_src: false
-  set cookie: :"8fMAU`0lMv4)yrT(/6oNXDjT3=H`Z9mV]d~~D>SH.`Uyq/cusZ2xEj!j:wa.Tndv"
-  set vm_args: "rel/vm.args"
+  set(include_erts: true)
+  set(include_src: false)
+  set(cookie: :"8fMAU`0lMv4)yrT(/6oNXDjT3=H`Z9mV]d~~D>SH.`Uyq/cusZ2xEj!j:wa.Tndv")
+  set(vm_args: "rel/vm.args")
 end
 
 # You may define one or more releases in this file.
@@ -47,9 +46,19 @@ end
 # will be used by default
 
 release :werewolf_game do
-  set version: current_version(:werewolf_game)
-  set applications: [
-    :runtime_tools
-  ]
-end
+  set(version: current_version(:werewolf_game))
 
+  set(
+    applications: [
+      :runtime_tools
+    ]
+  )
+
+  set(pre_start_hook: "rel/hooks/pre_start")
+
+  set(
+    commands: [
+      migrate: "rel/commands/migrate.sh"
+    ]
+  )
+end
