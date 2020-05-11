@@ -1,0 +1,17 @@
+
+<div class="bg-white w-full shadow rounded-lg text-center">
+  <div class="sm:flex sm:items-center px-2 py-4">
+    <div class="flex-grow">
+      <h3 class="font-normal px-2 py-3 leading-tight">Membres connectés</h3>
+      <div class="w-full">
+        <%= for member <- @members do %>
+          <div class="my-1 hover:bg-blue-100 rounded">
+            <div class="h-10 py-3 px-1 text-center">
+                <%= member.nickname %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,19 @@
+<div class="bg-white w-full shadow rounded-lg p-5">
+  <%= form_for :message, "#", [phx_target: @myself, phx_submit: :post_message, "x-on:submit.debounce.50ms": "$refs.input_message.value = ''"], fn f -> %>
+    <div class="w-full flex space-x-2">
+      <div class="flex-1">
+        <%= text_input f, :text, autocomplete: "off", class: "bg-gray-200 w-full rounded-lg shadow border p-2", "x-ref": "input_message" %>
+      </div>
+      <div class="flex-initial">
+        <%= submit "Envoyer", class: "rounded btn gray p-2 w-full" %>
+      </div>
+    </div>
+  <% end %>
+  <div class="w-full flex flex-col-reverse mt-3">
+    <%= for message <- @messages do %>
+      <div class="m-2 py-3 px-1 bg-gray-300 shadow rounded">
+        <b><%= message.user %></b> : <%= message.text %>
+      </div>
+    <% end %>
+  </div>
+</div>

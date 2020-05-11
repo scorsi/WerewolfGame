@@ -1,10 +1,24 @@
-<p>Hello <%= length @room.members %> members</p>
-<ul>
-    <%= for member <- @room.members do %>
-      <li><%= member.nickname %></li>
-    <% end %>
-</ul>
-<%= if @is_owner? do %>
-<p>You're the owner</p>
-<% end %>
-<p><%= @room.id %></p>
+<div class="flex space-x-10">
+  <div class="flex-1">
+    <div class="text-center text-xl text-gray-100 border-b">
+      <%= @room.name %>
+    </div>
+
+    <div phx-hook="AlpineComponentsHook" x-data="{ tab: 'chat' }" class="mt-2">
+      <button x-bind:class="{ 'active': tab === 'chat' }" x-on:click="tab = 'chat'" class="btn white rounded-lg">Chat</button>
+      <button x-bind:class="{ 'active': tab === 'settings' }" x-on:click="tab = 'settings'" class="btn white rounded-lg">Paramètres du salon</button>
+
+      <div x-show="tab === 'chat'" class="mt-1">
+        <%= live_component(@socket, WerewolfGameWeb.Room.ChatComponent, id: :chat_component, room_id: @room.id, current_user: @current_user, messages: @room.messages) %>
+      </div>
+      <div x-show="tab === 'settings'" x-cloak class="mt-1">
+        <%= if @is_owner? do %>
+          <%= live_component(@socket, WerewolfGameWeb.Room.EditComponent, id: :edit_component, room_id: @room.id) %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div>
+    <%= live_component(@socket, WerewolfGameWeb.Room.MembersListComponent, id: :members_list_component, members: @room.members) %>
+  </div>
+</div>
