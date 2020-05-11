@@ -34,7 +34,7 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
   defmacro __using__(_opts) do
     # Customise this for your app
     # You'll also need to replace the references to "app_name_auth"
-    renewal_config = [renew_session: true, interval: :timer.seconds(5)]
+    renewal_config = [renew_session: true, interval: :timer.minutes(5)]
     pow_config = [otp_app: :werewolf_game, backend: MnesiaCache]
 
     quote do
