@@ -19,7 +19,7 @@ config :werewolf_game,
        WerewolfGameWeb.Repo,
        adapter: Ecto.Adapters.Postgres,
        url: "${DATABASE_URL}",
-       database: "",
+       database: "werewolf_game",
        ssl: true,
        pool_size: 2
 
