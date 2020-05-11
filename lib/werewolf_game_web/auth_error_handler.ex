@@ -4,12 +4,12 @@ defmodule WerewolfGameWeb.AuthErrorHandler do
   def call(conn, :not_authenticated) do
     conn
     |> put_flash(:error, "You've to be authenticated first")
-    # |> redirect(to: Routes.login_path(conn, :login))
+    |> redirect(to: Routes.live_path(conn, WerewolfGameWeb.HomeLive))
   end
 
   def call(conn, :already_authenticated) do
     conn
     |> put_flash(:error, "You're already authenticated")
-    # |> redirect(to: Routes.home_path(conn, :index))
+    |> redirect(to: Routes.live_path(conn, WerewolfGameWeb.HomeLive))
   end
 end
