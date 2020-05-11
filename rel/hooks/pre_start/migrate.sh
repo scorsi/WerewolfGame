@@ -1,3 +1,3 @@
 #!/bin/sh
 
-bin/myapp command Elixir.WerewolfGame.ReleaseTasks init
+bin/werewolf_game command Elixir.WerewolfGame.ReleaseTasks init
