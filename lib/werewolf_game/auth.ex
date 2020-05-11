@@ -17,7 +17,7 @@ defmodule WerewolfGame.Auth do
       [%User{}, ...]
 
   """
-  def list_auth_users do
+  def list_auth_users() do
     Repo.all(User)
   end
 

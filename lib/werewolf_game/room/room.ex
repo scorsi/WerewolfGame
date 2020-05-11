@@ -1,4 +1,6 @@
 defmodule WerewolfGame.Room do
+  @moduledoc false
+
   defstruct id: "",
             name: "",
             members: [],
@@ -13,9 +15,9 @@ defmodule WerewolfGame.Room do
             actual_character: nil,
             actual_phase: :first_day
 
-  alias WerewolfGame.{RoomSupervisor, Auth.User, Room, PubSub, PublicRoomAgent}
-
   use GenServer, restart: :transient
+
+  alias WerewolfGame.{Auth.User, PublicRoomAgent, PubSub, Room, RoomSupervisor}
 
   ### CLIENT API
 
@@ -25,28 +27,28 @@ defmodule WerewolfGame.Room do
   end
 
   def post_message(room, message, user),
-      do: RoomSupervisor.cast_process(room, {:post_message, message, user})
+    do: RoomSupervisor.cast_process(room, {:post_message, message, user})
 
   def get_info(room),
-      do: RoomSupervisor.call_process(room, {:get_info})
+    do: RoomSupervisor.call_process(room, {:get_info})
 
   def create_room(room),
-      do: RoomSupervisor.start_room(%Room{room | id: UUID.uuid4(:hex)})
+    do: RoomSupervisor.start_room(%Room{room | id: UUID.uuid4(:hex)})
 
   def delete_room(room),
-      do: RoomSupervisor.kill_room(room)
+    do: RoomSupervisor.kill_room(room)
 
   def register_user(room, user),
-      do: RoomSupervisor.cast_process(room, {:register_user, user})
+    do: RoomSupervisor.cast_process(room, {:register_user, user})
 
   def unregister_user(room, user),
-      do: RoomSupervisor.cast_process(room, {:unregister_user, user})
+    do: RoomSupervisor.cast_process(room, {:unregister_user, user})
 
   def update_room(room, attributes),
-      do: RoomSupervisor.cast_process(room, {:update_room, attributes})
+    do: RoomSupervisor.cast_process(room, {:update_room, attributes})
 
   def start_game(room),
-      do: RoomSupervisor.cast_process(room, {:start_game})
+    do: RoomSupervisor.cast_process(room, {:start_game})
 
   ### SERVER API
 
@@ -97,9 +99,9 @@ defmodule WerewolfGame.Room do
       end
 
     state = %Room{
-      state |
-      name: name,
-      public?: public?
+      state
+      | name: name,
+        public?: public?
     }
 
     case public? do
@@ -117,8 +119,8 @@ defmodule WerewolfGame.Room do
     user = %{nickname: user.nickname, id: user.id}
 
     state = %Room{
-      state |
-      members: state.members ++ [user]
+      state
+      | members: state.members ++ [user]
     }
 
     PubSub.broadcast("room:#{state.id}", :registered_user, user)
@@ -129,10 +131,10 @@ defmodule WerewolfGame.Room do
   @impl true
   def handle_cast({:unregister_user, %User{} = user}, %Room{} = state) do
     state = %Room{
-      state |
-      members:
-        state.members
-        |> Enum.reject(fn u -> u.id == user.id end)
+      state
+      | members:
+          state.members
+          |> Enum.reject(fn u -> u.id == user.id end)
     }
 
     PubSub.broadcast("room:#{state.id}", :unregistered_user, user)
@@ -158,8 +160,8 @@ defmodule WerewolfGame.Room do
     }
 
     state = %Room{
-      state |
-      messages: messages ++ [message]
+      state
+      | messages: messages ++ [message]
     }
 
     PubSub.broadcast("room:#{state.id}", :new_message, message)
@@ -192,10 +194,10 @@ defmodule WerewolfGame.Room do
       )
 
     state = %Room{
-      state |
-      status: :running,
-      assigned_characters: assigned_characters,
-      characters_left: characters_left
+      state
+      | status: :running,
+        assigned_characters: assigned_characters,
+        characters_left: characters_left
     }
 
     PubSub.broadcast(
@@ -223,10 +225,10 @@ defmodule WerewolfGame.Room do
   @impl true
   def handle_info({:clear_message, message_id}, %Room{messages: messages} = state) do
     state = %Room{
-      state |
-      messages:
-        messages
-        |> Enum.filter(fn m -> m.id != message_id end)
+      state
+      | messages:
+          messages
+          |> Enum.filter(fn m -> m.id != message_id end)
     }
 
     PubSub.broadcast("room:#{state.id}", :removed_message, message_id)

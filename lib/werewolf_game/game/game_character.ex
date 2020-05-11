@@ -1,4 +1,6 @@
 defmodule WerewolfGame.GameCharacter do
+  @moduledoc false
+
   @characters [
     %{
       id: 0,

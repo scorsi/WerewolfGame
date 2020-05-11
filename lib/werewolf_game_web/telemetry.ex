@@ -1,4 +1,6 @@
 defmodule WerewolfGameWeb.Telemetry do
+  @moduledoc false
+
   use Supervisor
   import Telemetry.Metrics
 
@@ -15,7 +17,7 @@ defmodule WerewolfGameWeb.Telemetry do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
-  def metrics do
+  def metrics() do
     [
       summary(
         "phoenix.endpoint.stop.duration",
@@ -26,13 +28,11 @@ defmodule WerewolfGameWeb.Telemetry do
         tags: [:route],
         unit: {:native, :millisecond}
       ),
-
       summary("werewolf_game.repo.query.total_time", unit: {:native, :millisecond}),
       summary("werewolf_game.repo.query.decode_time", unit: {:native, :millisecond}),
       summary("werewolf_game.repo.query.query_time", unit: {:native, :millisecond}),
       summary("werewolf_game.repo.query.queue_time", unit: {:native, :millisecond}),
       summary("werewolf_game.repo.query.idle_time", unit: {:native, :millisecond}),
-
       summary("vm.memory.total", unit: {:byte, :kilobyte}),
       summary("vm.total_run_queue_lengths.total"),
       summary("vm.total_run_queue_lengths.cpu"),
@@ -40,7 +40,7 @@ defmodule WerewolfGameWeb.Telemetry do
     ]
   end
 
-  defp periodic_measurements do
+  defp periodic_measurements() do
     []
   end
 end

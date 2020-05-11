@@ -1,12 +1,16 @@
 defmodule WerewolfGameWeb.HomeLive do
+  @moduledoc false
+
   use WerewolfGameWeb, :live_view
   use WerewolfGameWeb.LiveViewPowHelper
 
+  alias Phoenix.View
   alias WerewolfGame.PublicRoomAgent
+  alias WerewolfGameWeb.HomeView
 
   @impl true
   def render(assigns) do
-    Phoenix.View.render(WerewolfGameWeb.HomeView, "index.html", assigns)
+    View.render(HomeView, "index.html", assigns)
   end
 
   @impl true

@@ -1,25 +1,34 @@
 defmodule WerewolfGame.Application do
+  @moduledoc false
+
   use Application
+
+  alias Phoenix.PubSub
+  alias Pow.Store.Backend.MnesiaCache, as: PowMnesiaCache
+  alias WerewolfGame.{Presence, PublicRoomAgent, Repo, RoomRegistry, RoomSupervisor}
+  alias WerewolfGame.PubSub, as: ApplicationPubSub
+  alias WerewolfGame.Supervisor, as: ApplicationSupervisor
+  alias WerewolfGameWeb.{Endpoint, Telemetry}
 
   def start(_type, _args) do
     children = [
-      WerewolfGame.Repo,
-      WerewolfGameWeb.Telemetry,
-      {Phoenix.PubSub, name: WerewolfGame.PubSub},
-      {Registry, keys: :unique, name: WerewolfGame.RoomRegistry},
-      {DynamicSupervisor, strategy: :one_for_one, name: WerewolfGame.RoomSupervisor},
-      WerewolfGame.PublicRoomAgent,
-      WerewolfGame.Presence,
-      WerewolfGameWeb.Endpoint,
-      Pow.Store.Backend.MnesiaCache,
+      Repo,
+      Telemetry,
+      {PubSub, name: ApplicationPubSub},
+      {Registry, keys: :unique, name: RoomRegistry},
+      {DynamicSupervisor, strategy: :one_for_one, name: RoomSupervisor},
+      PublicRoomAgent,
+      Presence,
+      Endpoint,
+      PowMnesiaCache
     ]
 
-    opts = [strategy: :one_for_one, name: WerewolfGame.Supervisor]
+    opts = [strategy: :one_for_one, name: ApplicationSupervisor]
     Supervisor.start_link(children, opts)
   end
 
   def config_change(changed, _new, removed) do
-    WerewolfGameWeb.Endpoint.config_change(changed, removed)
+    Endpoint.config_change(changed, removed)
     :ok
   end
 end

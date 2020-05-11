@@ -1,4 +1,6 @@
 defmodule WerewolfGameWeb.AuthErrorHandler do
+  @moduledoc false
+
   use WerewolfGameWeb, :controller
 
   def call(conn, :not_authenticated) do

@@ -1,4 +1,6 @@
 defmodule WerewolfGame.GameScenario do
+  @moduledoc false
+
   @scenarios [
     %{
       name: :first_night,

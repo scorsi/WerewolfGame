@@ -1,4 +1,6 @@
 defmodule WerewolfGameWeb.ErrorHelpers do
+  @moduledoc false
+
   use Phoenix.HTML
 
   def error_tag(form, field) do

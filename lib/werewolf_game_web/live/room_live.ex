@@ -1,17 +1,21 @@
 defmodule WerewolfGameWeb.RoomLive do
+  @moduledoc false
+
   use WerewolfGameWeb.LiveViewPowHelper
   use WerewolfGameWeb, :live_view
 
+  alias Phoenix.View
   alias WerewolfGame.Room
+  alias WerewolfGameWeb.RoomView
 
   @impl true
   def render(%{room: room} = assigns) do
     case room do
       nil ->
-        Phoenix.View.render(WerewolfGameWeb.RoomView, "not_found.html", assigns)
+        View.render(RoomView, "not_found.html", assigns)
 
       _ ->
-        Phoenix.View.render(WerewolfGameWeb.RoomView, "index.html", assigns)
+        View.render(RoomView, "index.html", assigns)
     end
   end
 
@@ -53,6 +57,7 @@ defmodule WerewolfGameWeb.RoomLive do
 
       room ->
         Process.send_after(self(), %{event: :join}, 100)
+
         {
           :noreply,
           assign(
@@ -113,8 +118,8 @@ defmodule WerewolfGameWeb.RoomLive do
       assign(
         socket,
         room: %Room{
-          room |
-          members: room.members ++ [user]
+          room
+          | members: room.members ++ [user]
         }
       )
     }
@@ -134,10 +139,10 @@ defmodule WerewolfGameWeb.RoomLive do
       assign(
         socket,
         room: %Room{
-          room |
-          members:
-            members
-            |> Enum.reject(fn u -> u.id == user.id end)
+          room
+          | members:
+              members
+              |> Enum.reject(fn u -> u.id == user.id end)
         }
       )
     }
@@ -156,9 +161,10 @@ defmodule WerewolfGameWeb.RoomLive do
         } = socket
       ) do
     room = %Room{
-      room |
-      messages: messages ++ [message]
+      room
+      | messages: messages ++ [message]
     }
+
     {:noreply, assign(socket, room: room)}
   end
 
@@ -175,11 +181,12 @@ defmodule WerewolfGameWeb.RoomLive do
         } = socket
       ) do
     room = %Room{
-      room |
-      messages:
-        messages
-        |> Enum.filter(fn m -> m.id != message_id end)
+      room
+      | messages:
+          messages
+          |> Enum.filter(fn m -> m.id != message_id end)
     }
+
     {:noreply, assign(socket, room: room)}
   end
 
@@ -197,6 +204,7 @@ defmodule WerewolfGameWeb.RoomLive do
         } = socket
       ) do
     name = Keyword.get(attributes, :name, name)
+
     public? =
       case Keyword.get(attributes, :public?, public?) do
         "true" -> true
@@ -205,10 +213,11 @@ defmodule WerewolfGameWeb.RoomLive do
       end
 
     room = %Room{
-      room |
-      name: name,
-      public?: public?
+      room
+      | name: name,
+        public?: public?
     }
+
     {:noreply, assign(socket, room: room)}
   end
 end

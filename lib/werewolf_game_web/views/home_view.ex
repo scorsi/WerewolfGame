@@ -1,6 +1,5 @@
 defmodule WerewolfGameWeb.HomeView do
-  use WerewolfGameWeb, :view
+  @moduledoc false
 
-  alias WerewolfGameWeb.Room.ListComponent, as: RoomListComponent
-  alias WerewolfGameWeb.Room.CreateComponent, as: RoomCreateComponent
+  use WerewolfGameWeb, :view
 end

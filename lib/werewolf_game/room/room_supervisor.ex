@@ -1,4 +1,6 @@
 defmodule WerewolfGame.RoomSupervisor do
+  @moduledoc false
+
   use DynamicSupervisor
 
   alias WerewolfGame.Room
@@ -12,6 +14,7 @@ defmodule WerewolfGame.RoomSupervisor do
       __MODULE__,
       {WerewolfGame.Room, initial_state: room, name: get_process_via(room)}
     )
+
     room
   end
 
@@ -20,6 +23,7 @@ defmodule WerewolfGame.RoomSupervisor do
       nil -> :ok
       pid -> DynamicSupervisor.terminate_child(__MODULE__, pid)
     end
+
     room
   end
 
@@ -61,6 +65,7 @@ defmodule WerewolfGame.RoomSupervisor do
     case lookup_process(room) do
       pid -> GenServer.cast(pid, message)
     end
+
     room
   end
 end

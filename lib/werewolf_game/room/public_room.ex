@@ -1,4 +1,6 @@
 defmodule WerewolfGame.PublicRoom do
+  @moduledoc false
+
   defstruct id: "", name: "", member_count: 0, status: :open
 
   alias WerewolfGame.PublicRoom

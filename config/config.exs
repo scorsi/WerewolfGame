@@ -1,7 +1,7 @@
 use Mix.Config
 
 config :werewolf_game,
-       ecto_repos: [WerewolfGame.Repo]
+  ecto_repos: [WerewolfGame.Repo]
 
 config :werewolf_game,
        :pow,

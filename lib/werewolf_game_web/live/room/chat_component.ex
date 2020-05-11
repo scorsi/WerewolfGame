@@ -1,13 +1,18 @@
 defmodule WerewolfGameWeb.Room.ChatComponent do
+  @moduledoc false
+
   use WerewolfGameWeb, :live_component
 
+  alias Phoenix.View
   alias WerewolfGame.Room
+  alias WerewolfGameWeb.RoomView
 
   @impl true
   def render(assigns) do
-    Phoenix.View.render(WerewolfGameWeb.RoomView, "chat_component.html", assigns)
+    View.render(RoomView, "chat_component.html", assigns)
   end
 
+  @impl true
   def mount(socket) do
     {:ok, assign(socket, text: "")}
   end
@@ -31,6 +36,7 @@ defmodule WerewolfGameWeb.Room.ChatComponent do
       room_id
       |> Room.post_message(text, current_user)
     end
+
     {:noreply, socket}
   end
 end

@@ -1,11 +1,15 @@
 defmodule WerewolfGameWeb.Room.EditComponent do
+  @moduledoc false
+
   use WerewolfGameWeb, :live_component
 
-  alias WerewolfGame.{Room, GameCharacter}
+  alias Phoenix.View
+  alias WerewolfGame.{GameCharacter, Room}
+  alias WerewolfGameWeb.RoomView
 
   @impl true
   def render(assigns) do
-    Phoenix.View.render(WerewolfGameWeb.RoomView, "edit_component.html", assigns)
+    View.render(RoomView, "edit_component.html", assigns)
   end
 
   @impl true
@@ -26,6 +30,7 @@ defmodule WerewolfGameWeb.Room.EditComponent do
     room =
       room_id
       |> Room.get_info()
+
     {:ok, assign(socket, room_id: room_id, name: room.name, public?: room.public?)}
   end
 
@@ -46,6 +51,7 @@ defmodule WerewolfGameWeb.Room.EditComponent do
       ) do
     room_id
     |> Room.update_room(name: name, public?: public?)
+
     {:noreply, socket}
   end
 end

@@ -17,7 +17,7 @@ defmodule WerewolfGameWeb do
   and import those modules here.
   """
 
-  def controller do
+  def controller() do
     quote do
       use Phoenix.Controller, namespace: WerewolfGameWeb
 
@@ -27,7 +27,7 @@ defmodule WerewolfGameWeb do
     end
   end
 
-  def view do
+  def view() do
     quote do
       use Phoenix.View,
         root: "lib/werewolf_game_web/templates",
@@ -41,7 +41,7 @@ defmodule WerewolfGameWeb do
     end
   end
 
-  def live_view do
+  def live_view() do
     quote do
       use Phoenix.LiveView,
         layout: {WerewolfGameWeb.LayoutView, "live.html"}
@@ -50,7 +50,7 @@ defmodule WerewolfGameWeb do
     end
   end
 
-  def live_component do
+  def live_componen(t) do
     quote do
       use Phoenix.LiveComponent
 
@@ -58,7 +58,7 @@ defmodule WerewolfGameWeb do
     end
   end
 
-  def router do
+  def router() do
     quote do
       use Phoenix.Router
 
@@ -68,14 +68,14 @@ defmodule WerewolfGameWeb do
     end
   end
 
-  def channel do
+  def channel() do
     quote do
       use Phoenix.Channel
       import WerewolfGameWeb.Gettext
     end
   end
 
-  defp view_helpers do
+  defp view_helpers() do
     quote do
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML

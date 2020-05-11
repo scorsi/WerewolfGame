@@ -1,4 +1,6 @@
 defmodule WerewolfGameWeb.Router do
+  @moduledoc false
+
   require Logger
 
   use WerewolfGameWeb, :router

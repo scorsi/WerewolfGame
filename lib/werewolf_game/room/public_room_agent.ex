@@ -1,5 +1,7 @@
 defmodule WerewolfGame.PublicRoomAgent do
-  alias WerewolfGame.{PubSub, PublicRoom}
+  @moduledoc false
+
+  alias WerewolfGame.{PublicRoom, PubSub}
 
   use Agent
 

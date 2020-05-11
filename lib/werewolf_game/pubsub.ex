@@ -1,4 +1,6 @@
 defmodule WerewolfGame.PubSub do
+  @moduledoc false
+
   def subscribe(topic) do
     Phoenix.PubSub.subscribe(WerewolfGame.PubSub, topic)
   end
@@ -13,6 +15,7 @@ defmodule WerewolfGame.PubSub do
       topic,
       %{event: event, payload: payload}
     )
+
     {:ok, payload}
   end
 end

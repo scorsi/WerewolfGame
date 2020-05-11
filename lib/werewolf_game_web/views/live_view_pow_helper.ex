@@ -22,8 +22,12 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
 
   """
 
+  # credo:disable-for-lines:5
+  alias Phoenix.LiveView
+  alias Plug.Conn
+  alias Pow.{Plug.Session, Store.CredentialsCache, Store.Backend.MnesiaCache}
+  alias Pow.Plug, as: PowPlug
   alias WerewolfGame.Auth.User
-  alias Pow.Store.CredentialsCache
 
   require Logger
 
@@ -31,7 +35,7 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
     # Customise this for your app
     # You'll also need to replace the references to "app_name_auth"
     renewal_config = [renew_session: true, interval: :timer.seconds(5)]
-    pow_config = [otp_app: :werewolf_game, backend: Pow.Store.Backend.MnesiaCache]
+    pow_config = [otp_app: :werewolf_game, backend: MnesiaCache]
 
     quote do
       @pow_config unquote(Macro.escape(pow_config)) ++ [module: __MODULE__]
@@ -103,14 +107,14 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
 
   # assigns the current_user to the socket with the key current_user
   def assign_current_user(socket, user) do
-    socket |> Phoenix.LiveView.assign(current_user: user)
+    socket |> LiveView.assign(current_user: user)
   end
 
   # Session Renewal Logic
   def maybe_init_session_renewal(_, _, _, false, _), do: nil
 
   def maybe_init_session_renewal(socket, pid, session, true, interval) do
-    if Phoenix.LiveView.connected?(socket) do
+    if LiveView.connected?(socket) do
       Process.send_after(pid, {:renew_pow_session, session}, interval)
     end
   end
@@ -118,7 +122,7 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
   def handle_renew_pow_session(socket, pid, session, pow_config, renewal_config) do
     with {:ok, token} <- verify_token(socket, session, pow_config),
          {user, _metadata} = pow_credential <- CredentialsCache.get(pow_config, token),
-         {:ok, _session_token} <- update_session_ttl(pow_config, token, pow_credential) do
+         :ok <- update_session_ttl(pow_config, token, pow_credential) do
       # Successfully updates so queue up another renewal
       Process.send_after(
         pid,
@@ -134,9 +138,9 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
 
   # Verifies the session token
   defp verify_token(socket, %{"werewolf_game_auth" => signed_token}, pow_config) do
-    conn = struct!(Plug.Conn, secret_key_base: socket.endpoint.config(:secret_key_base))
-    salt = Atom.to_string(Pow.Plug.Session)
-    Pow.Plug.verify_token(conn, salt, signed_token, pow_config)
+    conn = struct!(Conn, secret_key_base: socket.endpoint.config(:secret_key_base))
+    salt = Atom.to_string(Session)
+    PowPlug.verify_token(conn, salt, signed_token, pow_config)
   end
 
   defp verify_token(_, _, _), do: nil
