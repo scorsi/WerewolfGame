@@ -18,22 +18,46 @@ defmodule WerewolfGame.PublicRoomAgent do
   end
 
   def actualize_room(room) do
-    room = room |> PublicRoom.create_from_room()
-    Agent.update(__MODULE__, &(&1 |> Map.put(room.id, room)))
+    room =
+      room
+      |> PublicRoom.create_from_room()
+
+    Agent.update(
+      __MODULE__,
+      &(&1
+        |> Map.put(room.id, room))
+    )
+
     PubSub.broadcast(@topic, :actualized_room, room)
     room
   end
 
   def register_room(room) do
-    room = room |> PublicRoom.create_from_room()
-    Agent.update(__MODULE__, &(&1 |> Map.put(room.id, room)))
+    room =
+      room
+      |> PublicRoom.create_from_room()
+
+    Agent.update(
+      __MODULE__,
+      &(&1
+        |> Map.put(room.id, room))
+    )
+
     PubSub.broadcast(@topic, :registered_room, room)
     room
   end
 
   def unregister_room(room) do
-    room = room |> PublicRoom.create_from_room()
-    Agent.update(__MODULE__, &(&1 |> Map.delete(room.id)))
+    room =
+      room
+      |> PublicRoom.create_from_room()
+
+    Agent.update(
+      __MODULE__,
+      &(&1
+        |> Map.delete(room.id))
+    )
+
     PubSub.broadcast(@topic, :unregistered_room, room)
     room
   end

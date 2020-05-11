@@ -6,7 +6,6 @@ defmodule CuriousMessenger.Repo.Migrations.CreateAuthUsers do
       add :nickname, :string, null: false
 
       timestamps()
-
     end
 
     create unique_index(:auth_users, [:nickname])

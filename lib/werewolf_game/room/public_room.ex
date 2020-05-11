@@ -4,6 +4,11 @@ defmodule WerewolfGame.PublicRoom do
   alias WerewolfGame.PublicRoom
 
   def create_from_room(room) do
-    %PublicRoom{id: room.id, name: room.name, member_count: length(room.members), status: room.status}
+    %PublicRoom{
+      id: room.id,
+      name: room.name,
+      member_count: length(room.members),
+      status: room.status
+    }
   end
 end

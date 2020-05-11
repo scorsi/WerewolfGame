@@ -17,10 +17,12 @@ defmodule WerewolfGameWeb.Telemetry do
 
   def metrics do
     [
-      summary("phoenix.endpoint.stop.duration",
+      summary(
+        "phoenix.endpoint.stop.duration",
         unit: {:native, :millisecond}
       ),
-      summary("phoenix.router_dispatch.stop.duration",
+      summary(
+        "phoenix.router_dispatch.stop.duration",
         tags: [:route],
         unit: {:native, :millisecond}
       ),
@@ -39,7 +41,6 @@ defmodule WerewolfGameWeb.Telemetry do
   end
 
   defp periodic_measurements do
-    [
-    ]
+    []
   end
 end

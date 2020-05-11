@@ -148,9 +148,10 @@ defmodule WerewolfGameWeb.RoomLive do
         %{event: :new_message, payload: message},
         %{
           assigns: %{
-            room: %Room{
-              messages: messages,
-            } = room
+            room:
+              %Room{
+                messages: messages
+              } = room
           }
         } = socket
       ) do
@@ -166,9 +167,10 @@ defmodule WerewolfGameWeb.RoomLive do
         %{event: :removed_message, payload: message_id},
         %{
           assigns: %{
-            room: %Room{
-              messages: messages,
-            } = room
+            room:
+              %Room{
+                messages: messages
+              } = room
           }
         } = socket
       ) do
@@ -186,10 +188,11 @@ defmodule WerewolfGameWeb.RoomLive do
         %{event: :updated, payload: attributes},
         %{
           assigns: %{
-            room: %Room{
-              name: name,
-              public?: public?
-            } = room
+            room:
+              %Room{
+                name: name,
+                public?: public?
+              } = room
           }
         } = socket
       ) do
@@ -203,10 +206,8 @@ defmodule WerewolfGameWeb.RoomLive do
 
     room = %Room{
       room |
-      name:
-        name,
-      public?:
-        public?
+      name: name,
+      public?: public?
     }
     {:noreply, assign(socket, room: room)}
   end

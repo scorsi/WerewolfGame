@@ -29,8 +29,9 @@ defmodule WerewolfGameWeb.HomeLive do
       :noreply,
       assign(
         socket,
-        rooms: rooms
-               |> Map.put(room.id, room)
+        rooms:
+          rooms
+          |> Map.put(room.id, room)
       )
     }
   end
@@ -48,8 +49,9 @@ defmodule WerewolfGameWeb.HomeLive do
       :noreply,
       assign(
         socket,
-        rooms: rooms
-               |> Map.put(room.id, room)
+        rooms:
+          rooms
+          |> Map.put(room.id, room)
       )
     }
   end
@@ -67,8 +69,9 @@ defmodule WerewolfGameWeb.HomeLive do
       :noreply,
       assign(
         socket,
-        rooms: rooms
-               |> Map.delete(room.id)
+        rooms:
+          rooms
+          |> Map.delete(room.id)
       )
     }
   end

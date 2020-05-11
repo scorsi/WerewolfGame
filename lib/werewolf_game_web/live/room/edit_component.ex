@@ -46,7 +46,6 @@ defmodule WerewolfGameWeb.Room.EditComponent do
       ) do
     room_id
     |> Room.update_room(name: name, public?: public?)
-
     {:noreply, socket}
   end
 end

@@ -88,6 +88,7 @@ defmodule WerewolfGame.Room do
   @impl true
   def handle_cast({:update_room, attributes}, %Room{name: name, public?: public?} = state) do
     name = Keyword.get(attributes, :name, name)
+
     public? =
       case Keyword.get(attributes, :public?, public?) do
         "true" -> true
@@ -155,6 +156,7 @@ defmodule WerewolfGame.Room do
       text: message,
       user: user.nickname
     }
+
     state = %Room{
       state |
       messages: messages ++ [message]
@@ -245,6 +247,7 @@ defmodule WerewolfGame.Room do
     {first_player, players_to_assign} =
       players_to_assign
       |> List.pop_at(0)
+
     {first_character, characters_to_assign} =
       characters_to_assign
       |> List.pop_at(0)
