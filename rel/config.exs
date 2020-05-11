@@ -55,10 +55,4 @@ release :werewolf_game do
   )
 
   set(pre_start_hooks: "rel/hooks/pre_start")
-
-  set(
-    commands: [
-      migrate: "rel/commands/migrate.sh"
-    ]
-  )
 end
