@@ -5,7 +5,7 @@ defmodule WerewolfGameWeb.UserController do
 
   use WerewolfGameWeb, :controller
 
-  alias Pow.Plus, as: PowPlug
+  alias Pow.Plug, as: PowPlug
   alias WerewolfGameWeb.HomeLive
 
   def register(conn, _params) do
@@ -18,7 +18,7 @@ defmodule WerewolfGameWeb.UserController do
     conn
     |> PowPlug.create_user(user_params)
     |> case do
-      {:ok, user, conn} ->
+      {:ok, _user, conn} ->
         conn
         |> PowPlug.update_user(user_params)
         |> case do

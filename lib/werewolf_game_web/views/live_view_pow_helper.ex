@@ -31,7 +31,7 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
 
   require Logger
 
-  defmacro __using__(opts) do
+  defmacro __using__(_opts) do
     # Customise this for your app
     # You'll also need to replace the references to "app_name_auth"
     renewal_config = [renew_session: true, interval: :timer.seconds(5)]
@@ -68,7 +68,7 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
   """
   def get_user(socket, session, pow_config) do
     with {:ok, token} <- verify_token(socket, session, pow_config),
-         {user, metadata} = pow_credential <- CredentialsCache.get(pow_config, token) do
+         {user, _metadata} = _pow_credential <- CredentialsCache.get(pow_config, token) do
       user
     else
       _any -> nil
@@ -79,7 +79,7 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
   def maybe_assign_current_user(
         socket,
         pid,
-        %{"werewolf_game_auth" => signed_token} = session,
+        %{"werewolf_game_auth" => _signed_token} = session,
         pow_config,
         renewal_config
       ) do
@@ -121,7 +121,7 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
 
   def handle_renew_pow_session(socket, pid, session, pow_config, renewal_config) do
     with {:ok, token} <- verify_token(socket, session, pow_config),
-         {user, _metadata} = pow_credential <- CredentialsCache.get(pow_config, token),
+         {_user, _metadata} = pow_credential <- CredentialsCache.get(pow_config, token),
          :ok <- update_session_ttl(pow_config, token, pow_credential) do
       # Successfully updates so queue up another renewal
       Process.send_after(
@@ -146,7 +146,7 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
   defp verify_token(_, _, _), do: nil
 
   # Updates the TTL on POW credential in the cache
-  def update_session_ttl(pow_config, session_token, {%User{} = user, metadata} = pow_credential) do
+  def update_session_ttl(pow_config, session_token, {%User{} = user, _metadata} = pow_credential) do
     sessions = CredentialsCache.sessions(pow_config, user)
 
     # Do we have an available session which matches the fingerprint?
@@ -155,7 +155,7 @@ defmodule WerewolfGameWeb.LiveViewPowHelper do
         Logger.debug("No Matching Session Found")
 
       # We have an available session. Now lets update it's TTL by passing the previously fetched credential
-      available_session ->
+      _available_session ->
         Logger.debug("Matching Session Found. Updating TTL")
         CredentialsCache.put(pow_config, session_token, pow_credential)
     end
