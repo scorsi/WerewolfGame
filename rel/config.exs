@@ -54,7 +54,7 @@ release :werewolf_game do
     ]
   )
 
-  set(pre_start_hook: "rel/hooks/pre_start")
+  set(pre_start_hooks: "rel/hooks/pre_start")
 
   set(
     commands: [
