@@ -16,7 +16,7 @@ config :werewolf_game,
        version: Mix.Project.config[:version]
 
 config :werewolf_game,
-       WerewolfGameWeb.Repo,
+       WerewolfGame.Repo,
        adapter: Ecto.Adapters.Postgres,
        url: "${DATABASE_URL}",
        database: "werewolf_game",
