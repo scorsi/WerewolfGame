@@ -168,6 +168,44 @@ defmodule WerewolfGame.Room do
   end
 
   @impl true
+  def handle_cast(
+        {:start_game},
+        %Room{
+          members: members,
+          selected_characters: selected_characters,
+          status: :open
+        } = state
+      ) do
+    # TODO: Check if a game can be started
+
+    {assigned_characters, characters_left} =
+      assign_characters(
+        randomly_order_list(
+          members
+          |> Map.get(:nickname),
+          []
+        ),
+        randomly_order_list(selected_characters, []),
+        []
+      )
+
+    state = %Room{
+      state |
+      status: :running,
+      assigned_characters: assigned_characters,
+      characters_left: characters_left
+    }
+
+    PubSub.broadcast(
+      "room:#{state.id}",
+      :game_started,
+      %{assigned_characters: assigned_characters}
+    )
+
+    {:noreply, state, {:continue, :end_update}}
+  end
+
+  @impl true
   def handle_continue(:end_update, %Room{} = state) do
     if state.public? do
       PublicRoomAgent.actualize_room(state)
@@ -197,5 +235,37 @@ defmodule WerewolfGame.Room do
   @impl true
   def handle_info(:timeout, %Room{} = state) do
     {:stop, :normal, state}
+  end
+
+  defp assign_characters([], characters_left, players) do
+    {players, characters_left}
+  end
+
+  defp assign_characters(players_to_assign, characters_to_assign, players) do
+    {first_player, players_to_assign} =
+      players_to_assign
+      |> List.pop_at(0)
+    {first_character, characters_to_assign} =
+      characters_to_assign
+      |> List.pop_at(0)
+
+    new_player = %{
+      nickname: first_player,
+      character: first_character
+    }
+
+    assign_characters(players_to_assign, characters_to_assign, players ++ [new_player])
+  end
+
+  defp randomly_order_list([last_elem], list) do
+    list ++ [last_elem]
+  end
+
+  defp randomly_order_list(list_to_order, list) do
+    {random_elem, list_to_order} =
+      list_to_order
+      |> List.pop_at(Enum.random(0..(length(list_to_order) - 1)))
+
+    randomly_order_list(list_to_order, list ++ [random_elem])
   end
 end
