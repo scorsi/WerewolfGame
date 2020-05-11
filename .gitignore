@@ -11,3 +11,6 @@ curious_messenger-*.tar
 /Mnesia.*
 /.elixir_ls
 *.tmp
+/.vscode/*
+/.idea/*
+*.iml
