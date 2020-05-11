@@ -50,7 +50,7 @@ defmodule WerewolfGameWeb do
     end
   end
 
-  def live_componen(t) do
+  def live_component() do
     quote do
       use Phoenix.LiveComponent
 
