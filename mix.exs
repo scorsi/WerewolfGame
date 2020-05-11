@@ -21,7 +21,7 @@ defmodule WerewolfGame.MixProject do
   def application do
     [
       mod: {WerewolfGame.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :mnesia]
     ]
   end
 
