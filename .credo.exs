@@ -12,7 +12,7 @@
         {Credo.Check.Readability.MaxLineLength, priority: :low, max_length: 120},
         {Credo.Check.Readability.ParenthesesOnZeroArityDefs, parens: true},
         {Credo.Check.Refactor.MapInto, false},
-        {Credo.Check.Warning.LazyLogging, false},
+        {Credo.Check.Warning.LazyLogging, false}
       ]
     }
   ]
