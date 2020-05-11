@@ -16,4 +16,4 @@ curious_messenger-*.tar
 *.iml
 .sobelow
 /priv/plts/*.plt
-/priv/plts/*.plt.hash%
+/priv/plts/*.plt.hash
