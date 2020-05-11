@@ -20,10 +20,10 @@ defmodule WerewolfGameWeb.UserController do
           {:ok, _user, conn} ->
             conn
             |> put_flash(:info, "Welcome!")
-            |> redirect(to: Routes.home_path(conn, :index))
+            |> redirect(to: Routes.live_path(conn, WerewolfGameWeb.HomeLive))
 
           {:error, _, conn} ->
-            redirect(conn, to: Routes.home_path(conn, :index))
+            redirect(conn, to: Routes.live_path(conn, WerewolfGameWeb.HomeLive))
         end
 
       {:error, changeset, conn} ->
@@ -46,7 +46,7 @@ defmodule WerewolfGameWeb.UserController do
       {:ok, conn} ->
         conn
         |> put_flash(:info, "Welcome back!")
-        |> redirect(to: Routes.home_path(conn, :index))
+        |> redirect(to: Routes.live_path(conn, WerewolfGameWeb.HomeLive))
 
       {:error, conn} ->
         changeset = Pow.Plug.change_user(conn, conn.params["user"])
@@ -60,6 +60,6 @@ defmodule WerewolfGameWeb.UserController do
   def logout(conn, _params) do
     conn
     |> Pow.Plug.delete()
-    |> redirect(to: Routes.home_path(conn, :index))
+    |> redirect(to: Routes.live_path(conn, WerewolfGameWeb.HomeLive))
   end
 end
