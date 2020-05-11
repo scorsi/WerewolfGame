@@ -7,3 +7,5 @@
 @import "./fonts.css";
 
 @import "tailwindcss/utilities";
+
+[x-cloak] { display: none; }
