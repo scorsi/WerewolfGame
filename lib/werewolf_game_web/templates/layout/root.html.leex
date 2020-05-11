@@ -5,30 +5,51 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <%= csrf_meta_tag() %>
-    <%= live_title_tag assigns[:page_title] || "WerewolfGame", suffix: " · Phoenix Framework" %>
+    <%= live_title_tag assigns[:page_title] || "WerewolfGame", suffix: " · WerewolfGame" %>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
-    <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
-  <body class="min-h-screen bg-gray-100">
-    <header class="bg-gray-800 w-full pt-8 shadow-lg" style="height: 225px">
-      <h1 class="text-center font-extrabold text-gray-100 text-2xl text-header">The Werewolf Online</h1>
-      <h2 class="text-center font-ultrathin text-gray-100 text-xs text-header">made by Scorsi</h1>
-      <div class="flex justify-center items-center w-full mt-4">
-        <%= if Pow.Plug.current_user(@conn) do %>
-          <div class="m-2 text-gray-100">
-            Connecté en tant que <%= @current_user.nickname %>
-          </div>
-          <%= link "Logout", to: Routes.logout_path(@conn, :logout), method: :delete, class: "btn white m-2" %>
-        <% else %>
-          <%= link "Register", to: Routes.register_path(@conn, :register), class: "btn white m-2" %>
-          <%= link "Login", to: Routes.login_path(@conn, :login), class: "btn white m-2" %>
-        <% end %>
+  <body class="min-h-screen bg-gray-700">
+    <header role="header" class="flex items-center justify-between w-full bg-gray-100 border-b-2 border-gray-900 shadow-lg px-4 py-3">
+      <div>
+        <h1 class="text-center text-gray-700 font-extrabold text-xl text-header">Le Loup-Garou pour une nuit</h1>
+        <h2 class="text-center text-gray-700 text-3xl text-header">En ligne</h2>
+      </div>
+      <div>
+        <div class="flex justify-center items-center w-full">
+          <%= if Pow.Plug.current_user(@conn) do %>
+            <div class="m-2 text-gray-700">
+              Connecté en tant que <%= @current_user.nickname %>
+            </div>
+            <%= link "Se déconnecter", to: Routes.logout_path(@conn, :logout), method: :delete, class: "btn gray m-2" %>
+          <% else %>
+            <%= link "S'enregistrer", to: Routes.register_path(@conn, :register), class: "btn gray m-2" %>
+            <%= link "Se connecter", to: Routes.login_path(@conn, :login), class: "btn gray m-2" %>
+          <% end %>
+        </div>
       </div>
     </header>
-    <main role="main" class="mx-auto container -mt-16">
-      <div class="bg-gray-100 shadow-lg border border-gray-800 rounded-lg py-5 px-8 mx-5">
-        <%= @inner_content %>
-      </div>
+    <main role="main" class="p-4">
+      <%= @inner_content %>
     </main>
+    <footer role="footer">
+      <p class="text-center font-ultrathin text-gray-200 text-sm">
+        <a target="_blank" href="https://www.ravensburger.fr/produits/jeux-de-soci%C3%A9t%C3%A9/jeux-d-ambiance/loup-garou-pour-une-nuit-epic-battle-26779/index.html" class="hover:text-blue-200">
+          Ce site est une adaptation du jeu du même nom de Ravensburger
+        </a>
+        <br/>
+        <a target="_blank" href="https://www.philibertnet.com/fr/ravensburger/67784-loup-garou-pour-une-nuit-epic-battle-4005556267798.html" class="text-xs hover:text-blue-200">
+          (si le jeu vous plait, achetez-le)
+        </a>
+        <br/>
+        <a target="_blank" href="https://github.com/scorsi/WerewolfGame" class="hover:text-blue-200">
+          Projet open-source réalisé par Sylvain Corsini
+        </a>
+      </p>
+      <p class="text-center font-ultrathin text-gray-500 text-xs">
+        <i>Ravensburger</i> et <i>Loup-Garou pour une nuit</i> sont des marques déposées de <a target="_blank" href="https://www.ravensburger.fr/start/mentions-l%C3%A9gales/index.html" class="hover:text-blue-500">Ravensburger</a>.
+        <!-- Toutes images sont de la propriété de <a target="_blank" href="https://www.ravensburger.fr/start/mentions-l%C3%A9gales/index.html" class="hover:text-blue-500">Ravensburger</a>. -->
+      </p>
+    </footer>
   </body>
 </html>

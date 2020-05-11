@@ -1,7 +1,26 @@
+<%= if @current_user == nil do %>
+  <div class="flex bg-gray-100 py-10 justify-center container mx-auto rounded-lg">
+      <div class="p-12 text-center max-w-2xl">
+          <div class="md:text-3xl text-3xl font-bold text-header">Le Loup-Garou pour une nuit</div>
+          <div class="text-xl font-normal mt-4">
+            Envie de jouer à un nouveau jeu sur navigateur avec vos amis ?
+          </div>
+          <div>
+            <%= link "S'enregistrer", to: Routes.register_path(@socket, :register), class: "btn gray m-2" %>
+            <%= link "Se connecter", to: Routes.login_path(@socket, :login), class: "btn gray m-2" %>
+          </div>
+          <div class="text-sm">
+            Le jeu réclame une inscription afin d'offrir l'expérience de jeu la plus optimale.
+          </div>
+      </div>
+  </div>
+<% end %>
 <div class="grid grid-cols-3 gap-4">
   <%= for room <- @rooms |> Enum.map(fn {_, v} -> v end) do %>
+    <%= if @current_user != nil do %>
     <a href="<%= Routes.live_path WerewolfGameWeb.Endpoint, WerewolfGameWeb.RoomLive, id: room.id %>">
-      <div class="py-5 px-3 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow ease-linear duration-100">
+    <% end %>
+      <div class="py-5 px-3 bg-gray-100 rounded-lg shadow-md hover:shadow-lg transition-shadow ease-linear duration-100">
         <div class="text-md text-gray-800">
           <%= room.name %>
           <span class="mb-3 bg-green-400 rounded-full px-2 py-1 text-white object-right-top mr-1 text-xs float-right"><%= room.status %></span>
@@ -10,6 +29,8 @@
           Joueurs actifs: <span class="font-bold"><%= room.member_count %></span> / 6
         </div>
       </div>
-    </a>
+      <%= if @current_user != nil do %>
+      </a>
+      <% end %>
   <% end %>
 </div>
