@@ -215,7 +215,9 @@ defmodule WerewolfGame.Room do
       PublicRoomAgent.actualize_room(state)
     end
 
-    if Enum.empty?(state.members) do
+    if state.members
+       |> Enum.find(fn m -> m.id == state.owner end) ||
+         Enum.empty?(state.members) do
       {:noreply, state, @room_timeout}
     else
       {:noreply, state}

@@ -220,4 +220,9 @@ defmodule WerewolfGameWeb.RoomLive do
 
     {:noreply, assign(socket, room: room)}
   end
+
+  @impl true
+  def handle_info(%{event: :terminated}, socket) do
+    {:noreply, assign(socket, room: nil)}
+  end
 end
