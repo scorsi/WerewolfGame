@@ -10,7 +10,11 @@ defmodule WerewolfGame.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+        ignore_warnings: ".dialyzer_ignore.exs"
+      ]
     ]
   end
 
@@ -42,6 +46,9 @@ defmodule WerewolfGame.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:pow, "~> 1.0"},
       {:uuid, "~> 1.1"},
+      {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:sobelow, "~> 0.8", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -50,7 +57,8 @@ defmodule WerewolfGame.MixProject do
       setup: ["deps.get", "ecto.setup", "cmd yarn --cwd assets"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"],
+      quality: ["format", "credo --strict", "sobelow --verbose", "dialyzer", "test"]
     ]
   end
 end
