@@ -48,7 +48,8 @@ defmodule WerewolfGame.MixProject do
       {:uuid, "~> 1.1"},
       {:credo, "~> 1.4", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:sobelow, "~> 0.8", only: [:dev, :test], runtime: false}
+      {:sobelow, "~> 0.8", only: [:dev, :test], runtime: false},
+      {:distillery, "~> 2.1"}
     ]
   end
 
